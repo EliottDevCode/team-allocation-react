@@ -12,7 +12,7 @@ const GroupedTeamMembers = ({employees, selectedTeam, setTeam}) => {
         teams.push(teamA);
 
         let teamBMembers = employees.filter((employee) => employee.teamName === 'TeamB');
-        let teamB = {team: 'TeamA', members: teamBMembers, collapsed: selectedTeam !== 'TeamB'}
+        let teamB = {team: 'TeamB', members: teamBMembers, collapsed: selectedTeam !== 'TeamB'}
         teams.push(teamB);
 
         let teamCMembers = employees.filter((employee) => employee.teamName === 'TeamC');
