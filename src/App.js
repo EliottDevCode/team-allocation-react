@@ -1,23 +1,27 @@
 import * as React from "react";
-import './App.css';
-import Header from  './Header';
-import Employees from  './Employees';
-import Footer from  './Footer';
+import "./App.css";
+import Header from "./Header";
+import Employees from "./Employees";
+import Footer from "./Footer";
+import GroupedTeamMembers from "./GroupedTeamMembers";
+import Nav  from "./Nav";
+import NotFound from "./NotFound";
 import {useState, useEffect} from "react";
+import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
 
 function App() {
 
-    const [selectedTeam, setTeam] = useState(JSON.parse(localStorage.getItem('selectedTeam')) || "Team B");
+    const [selectedTeam, setTeam] = useState(JSON.parse(localStorage.getItem('selectedTeam')) || 'Team B');
 
     const [employees, setEmployees] = useState(JSON.parse(localStorage.getItem('employeeList')) || [
         {
 
-        id: 1,
-        fullName: "Bob Jones",
-        designation: "JavaScript Developer",
-        gender: "male",
-        teamName: "TeamA"
-    },
+            id: 1,
+            fullName: "Bob Jones",
+            designation: "JavaScript Developer",
+            gender: "male",
+            teamName: "TeamA"
+        },
         {
             id: 2,
             fullName: "Jill Bailey",
@@ -108,26 +112,37 @@ function App() {
         setTeam(event.target.value);
     }
 
-    function  handleEmployeeCardClick(event) {
+    function handleEmployeeCardClick(event) {
         const tranformedEmployees = employees.map((employee) => employee.id === parseInt(event.currentTarget.id)
-            ?(employee.teamName === selectedTeam) ? {...employee, teamName:''}:{...employee,teamName: selectedTeam}
-            :employee,);
+            ? (employee.teamName === selectedTeam) ? {...employee, teamName: ''} : {...employee, teamName: selectedTeam}
+            : employee,);
         setEmployees(tranformedEmployees);
     }
 
-  return (
-    <div>
-      <Header selectedTeam={selectedTeam}
-              teamMemberCount={employees.filter((employees) => employees.teamName === selectedTeam).length}
-      />
-      <Employees employees={employees}
-                 selectedTeam={selectedTeam}
-                 handleEmployeeCardClick={handleEmployeeCardClick}
-                 handleTeamSelectionChange={handleTeamSelectionChange}
-      />
-      <Footer/>
-    </div>
-  );
+    return (
+        <Router>
+            <Nav/>
+            <Header selectedTeam={selectedTeam}
+                    teamMemberCount={employees.filter((employees) => employees.teamName === selectedTeam).length}
+            />
+            <Routes>
+                <Route path="/"
+                       element={
+                           <Employees employees={employees}
+                                      selectedTeam={selectedTeam}
+                                      handleEmployeeCardClick={handleEmployeeCardClick}
+                                      handleTeamSelectionChange={handleTeamSelectionChange}
+                           />
+                       }>
+                </Route>
+                <Route path="/GroupedTeamMembers" element={<GroupedTeamMembers employees={employees} selectedTeam={selectedTeam} setTeam={setTeam} />}>
+                </Route>
+                <Route path="*" element={<NotFound/>}>
+                </Route>
+            </Routes>
+            <Footer/>
+        </Router>
+    );
 }
 
 export default App;
